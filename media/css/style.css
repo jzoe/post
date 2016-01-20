@@ -47,19 +47,19 @@ td, th { padding:5px 10px; border:1px solid #886; background:#efefef; }
 #container{width:800px;margin:2em auto;display:block;padding:0 2em;}
 */
 #container {
-    width: 1000px;
-    margin: 2em auto 60px;
+    width: 850px;
+    margin: 1em auto 1em;
     min-height: 400px;
     height: auto !important;
     height: 400px;
 }
 #main {
-    margin-bottom: 80px;
+    margin-bottom: 1em;
     width: 800px;
     float: left;
     background: #fff;
-    padding: 30px;
-    /*box-shadow: 0 2px 6px #ccc;*/
+    padding: 25px;
+    box-shadow: 0 2px 6px #ccc;
 }
 
 .content{font-size:16px;line-height:24px;}
@@ -168,11 +168,11 @@ background: #83BF73;
 }
 
 .sidenav {
-	width: 20em;
+	width: 15em;
 	background: #fff;
 	float: right;
 	padding: 0px;
-	margin-left: 55em;
+	margin-left: 80em;
 	box-shadow: 0 1px 10px #ccc
 }
 
