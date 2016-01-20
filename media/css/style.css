@@ -48,7 +48,7 @@ td, th { padding:5px 10px; border:1px solid #886; background:#efefef; }
 
 .listing-item time{color:#999999;}
 .listing-seperator{font-weight:bold;}
-.meta{font-size:12px;color:#888;}
+.meta{text-align:right;font-size:12px;color:#888;}
 .pageNav{font-weight:bold;font-size:17px;}
 .pageNavInvalid{font-weight:bold;font-size:17px;color:#D0D0D0;}
 header{padding:.5em 0;border-bottom: 1px solid #cccccc;}
