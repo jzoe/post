@@ -5,42 +5,52 @@ layout: default
 <section class="post">
 {{ content }}
 </section>
-<section class="meta">
-<span class="author">
-  <a href="http://gongjingzhou.cn/">{{ site.author }}</a>
-</span>
-<span class="time">
-  /
-  <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date:"%Y-%m-%d" }}</time>
-</span>
-<br />
-<span style="float:left;">
-    <a {% if page.previous %} href="/post{{ page.previous.url }}" class="pageNav"{% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >PREVIOUS</a>
-    &nbsp;&nbsp;&nbsp;
-    <a {% if page.next %} href="/post{{ page.next.url }}" class="pageNav"{% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >NEXT</a>
-</span>
 
-<span class="license">
-  Published under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>
-</span>
-{% if page.categories.size != 0 %}
-| 
-<span class="categories">
-  in categories
-  {% for cat in page.categories %}
-  <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;
-  {% endfor %}
-</span>
-{% endif %}
- {% if page.tags.size != 0 %}
- | 
-<span class="tags">
-  tagged with 
-  {% for tag in page.tags %}
-  <a href="{{ site.url }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;
-  {% endfor %}
-</span>
-{% endif %}
+<section class="meta">
+
+	<span class="author">
+	  <a href="http://gongjingzhou.cn/">{{ site.author }}</a>
+	</span>
+	
+	<span class="time">
+	  /
+	  <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date:"%Y-%m-%d" }}</time>
+	</span>
+	
+	<br />
+	
+	<span style="float:left; color:#">
+		<a {% if page.previous %} href="/post{{ page.previous.url }}" class="pageNav"{% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >PREVIOUS</a>
+		&nbsp;&nbsp;&nbsp;
+		<a {% if page.next %} href="/post{{ page.next.url }}" class="pageNav"{% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >NEXT</a>
+	</span>
+
+	<span class="license">
+	  Published under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>
+	</span>
+	
+	{% if page.categories.size != 0 %}
+	| 
+	<span class="categories">
+	  in categories
+	  {% for cat in page.categories %}
+	  <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>&nbsp;
+	  {% endfor %}
+	</span>
+	{% endif %}
+	
+	{% if page.tags.size != 0 %}
+	| 
+	<span class="tags">
+	  tagged with 
+	  {% for tag in page.tags %}
+	  <a href="{{ site.url }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;
+	  {% endfor %}
+	</span>
+	{% endif %}
+	
 </section>
+
 <br />
+
 {% include comments.md %}
