@@ -13,7 +13,7 @@ pagetitle: 懒死的猪
 
 * 网站：[{{ site.name }}]({{ site.url }})
 * 邮箱：[{{ site.email }}](mailto:{{ site.email }})
-* GitHub : [http://github.com/{{ site.github }}](http://github.com/{{ site.github }})
+* GitHub : [我的GitHub](http://github.com/{{ site.github }} "空空如也，但也不妨逛逛")
 * 微博: [我的微博](http://weibo.com/u/{{ site.weibo }})
 
 ##本站架构
