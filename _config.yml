@@ -1,0 +1,11 @@
+markdown: rdiscount
+permalink: /:year/:month/:title/
+url: http://www.gongjingzhou.cn/post
+author: 龚京洲
+highlighter: pygments
+production_url : http://www.gongjingzhou.cn/post
+name: Mysql DBA
+description: 龚京洲的个人博客
+email: jzoegong@gmail.com
+weibo: gongjingzhou
+github: jzoe
