@@ -46,7 +46,7 @@ $(document).ready(function() {
 		
 		function genTmpl(){
             var h1txt = $('header').text();
-            var tmpl = '<ul style="border:no;"><li class="h1"><a href="#">' + h1txt + '</a></li>';
+            var tmpl = '<ul style="border:none;"><li class="h1" style="list-style-type:none;font-weight:bold;"><a href="#">' + h1txt + '</a></li>';
 
             var heading = initHeading();
             var h2 = heading.h2;
