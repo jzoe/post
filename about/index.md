@@ -9,12 +9,13 @@ pagetitle: 懒死的猪
 
 * 南京邮电大学 本科 2012.09 - 至今
 * 网易邮件DBA
+
 ##欢迎交流
 
-* 网站：[{{ site.name }}]({{ site.url }})
-* 邮箱：[{{ site.email }}](mailto:{{ site.email }})
+* 网站：[我的主页]({{ site.url }} "浏览我的真容 O(∩_∩)O哈哈~")
+* 邮箱：[{{ site.email }}](mailto:{{ site.email }} "偷偷告诉你我还有一个邮箱：hzgongjingzhou@corp.netease.com")
 * GitHub : [我的GitHub](http://github.com/{{ site.github }} "空空如也，但也不妨逛逛")
-* 微博: [我的微博](http://weibo.com/u/{{ site.weibo }})
+* 微博: [我的微博](http://weibo.com/u/{{ site.weibo }} "什么都没有，别看了")
 
 ##本站架构
 
