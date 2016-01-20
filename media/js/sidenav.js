@@ -46,14 +46,14 @@ $(document).ready(function() {
 		
 		function genTmpl(){
             var h1txt = $('header').text();
-            var tmpl = '<ul style="border:none;"><li class="h1" style="list-style-type:none;font-weight:bold;"><a href="#">' + h1txt + '</a></li>';
+            var tmpl = '<ul style="border:none;"><li class="h1" style="list-style-type:none;font-weight:bold;font-size:14px;"><a href="#">' + h1txt + '</a></li>';
 
             var heading = initHeading();
             var h2 = heading.h2;
             var h3 = heading.h3;
 
             for(var i=0;i<h2.length;i++){
-                tmpl += '<li style="list-style-type:circle;font-size:10px;"><a href="#" data-id="'+h2[i].id+'">'+h2[i].name+'</a></li>';
+                tmpl += '<li style="list-style-type:circle;font-size:12px;"><a href="#" data-id="'+h2[i].id+'">'+h2[i].name+'</a></li>';
 
                 if(h3[i]){
                     for(var j=0;j<h3[i].length;j++){
