@@ -53,11 +53,11 @@ $(document).ready(function() {
             var h3 = heading.h3;
 
             for(var i=0;i<h2.length;i++){
-                tmpl += '<li style="list-style-type:circle;font-size:12px;"><a href="#" data-id="'+h2[i].id+'">'+h2[i].name+'</a></li>';
+                tmpl += '<li style="list-style-type:circle;font-size:12px;word-break: break-word;"><a href="#" data-id="'+h2[i].id+'">'+h2[i].name+'</a></li>';
 
                 if(h3[i]){
                     for(var j=0;j<h3[i].length;j++){
-                        tmpl += '<li class="h3" style="list-style-type:none;font-size:8px;"><a href="#" data-id="'+h3[i][j].id+'">'+h3[i][j].name+'</a></li>';
+                        tmpl += '<li class="h3" style="list-style-type:none;font-size:8px;word-break: break-word;"><a href="#" data-id="'+h3[i][j].id+'">'+h3[i][j].name+'</a></li>';
                     }
                 }
             }
