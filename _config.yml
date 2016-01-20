@@ -1,12 +1,12 @@
 markdown: rdiscount
-permalink: /:year/:month/:title/
+
 url: http://www.gongjingzhou.cn/post
 author: 龚京洲
 highlighter: pygments
 production_url : http://www.gongjingzhou.cn/post
 gems: [jekyll-paginate]
 paginate: 20
-paginate_path: "post/page:num"
+paginate_path: "/post/page:num"
 name: Mysql DBA
 description: 龚京洲的个人博客
 email: jzoegong@gmail.com
