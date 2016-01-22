@@ -40,22 +40,11 @@ int main(int argc, char* argv[])
 ```
 在代码中，使用cpp标记的效果如下：
 
-```cpp
-#include <stdio.h>
-int main(int argc, char* argv[])
-{
-	unsigned int a = -20;
-	int b = 10;
-	if( a + b > 6 )
-	{
-		puts(">6");
-	}
-	else
-	{
-		puts("<6");
-	}
-	return 0;
-}
+```java
+Integer n1 = new Integer(47);
+Integer n2 = new Integer(47);
+System.out.println(n1 == n2);
+System.out.println(n1 != n2);
 ```
 
 在代码中用标记结尾，效果如下：
