@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 ```
-在代码中，使用```cpp标记的效果如下：
+在代码中，使用cpp标记的效果如下：
 
 ```cpp
 #include <stdio.h>
