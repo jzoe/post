@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 }
 ```
 
-在代码中用{% hightlight %}... {% endhightlight %}标记结尾，效果如下：
+在代码中用`{% hightlight %}... {% endhightlight %}`标记结尾，效果如下：
 
 {% highlight cpp linenos %}
 #include <stdio.h>
