@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
-{% endhighlight java %}
+{% endhighlight cpp %}
 
 
 在代码前添加一个tab，效果如下：
