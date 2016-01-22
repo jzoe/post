@@ -21,7 +21,7 @@ tags: [markdown]
 ##  代码段
 下面是一段C语言代码段，将所有的代码行缩进一个tab，并在代码之前空一行，就可将缩进区域转为code块：
 
-```c
+```
 #include <stdio.h>
 int main(int argc, char* argv[])
 {
@@ -56,7 +56,55 @@ int main(int argc, char* argv[])
 	return 0;
 }
 ```
+{% highlight cpp linenos %}
+#include <stdio.h>
+int main(int argc, char* argv[])
+{
+	unsigned int a = -20;
+	int b = 10;
+	if( a + b > 6 )
+	{
+		puts(">6");
+	}
+	else
+	{
+		puts("<6");
+	}
+	return 0;
+}
+{% endhighlight java %}
 
+#include <stdio.h>
+int main(int argc, char* argv[])
+{
+	unsigned int a = -20;
+	int b = 10;
+	if( a + b > 6 )
+	{
+		puts(">6");
+	}
+	else
+	{
+		puts("<6");
+	}
+	return 0;
+}
+
+	#include <stdio.h>
+	int main(int argc, char* argv[])
+	{
+		unsigned int a = -20;
+		int b = 10;
+		if( a + b > 6 )
+		{
+			puts(">6");
+		}
+		else
+		{
+			puts("<6");
+		}
+		return 0;
+	}
 
 如果想在行内高亮某行代码，可用``来注释，效果是这样的`这是代码`，`void log()`。
 
