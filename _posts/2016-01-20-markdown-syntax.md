@@ -57,9 +57,25 @@ int main(int argc, char* argv[])
 }
 ```
 
-在代码中用`{% hightlight %}... {% endhightlight %}`标记结尾，效果如下：
+在代码中用{% highlight}标记结尾，效果如下：
 
-
+{% highlight cpp linenos %}
+#include <stdio.h>
+int main(int argc, char* argv[])
+{
+	unsigned int a = -20;
+	int b = 10;
+	if( a + b > 6 )
+	{
+		puts(">6");
+	}
+	else
+	{
+		puts("<6");
+	}
+	return 0;
+}
+{% endhighlight cpp %}
 
 
 在代码前添加一个tab，效果如下：
