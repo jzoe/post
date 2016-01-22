@@ -21,7 +21,7 @@ tags: [markdown]
 ##  代码段
 下面是一段C语言代码段，将所有的代码行缩进一个tab，并在代码之前空一行，就可将缩进区域转为code块：
 
-```
+```c
 #include <stdio.h>
 int main(int argc, char* argv[])
 {
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 ```
-
+在代码中，使用```标记的效果如下：
 ```cpp
 #include <stdio.h>
 int main(int argc, char* argv[])
@@ -56,6 +56,9 @@ int main(int argc, char* argv[])
 	return 0;
 }
 ```
+
+在代码中用{% hightlight %}... {% endhightlight %}标记结尾，效果如下：
+
 {% highlight cpp linenos %}
 #include <stdio.h>
 int main(int argc, char* argv[])
@@ -74,21 +77,8 @@ int main(int argc, char* argv[])
 }
 {% endhighlight java %}
 
-#include <stdio.h>
-int main(int argc, char* argv[])
-{
-	unsigned int a = -20;
-	int b = 10;
-	if( a + b > 6 )
-	{
-		puts(">6");
-	}
-	else
-	{
-		puts("<6");
-	}
-	return 0;
-}
+
+在代码前添加一个tab，效果如下：
 
 	#include <stdio.h>
 	int main(int argc, char* argv[])
