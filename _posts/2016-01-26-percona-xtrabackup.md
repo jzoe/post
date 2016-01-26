@@ -21,7 +21,7 @@ XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详�
 
 ### 添加环境变量
 在`.bash_profile`文件中添加下列内容:
-> 28 # MySQL path
+` 28 # MySQL path
  29 MYSQL_HOME=$HOME/app/mysql
  30 PATH=$MYSQL_HOME/bin:$PATH
  31 export PATH
@@ -29,7 +29,7 @@ XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详�
  33 # Percona XtraBackup path
  34 PERCONA_XB=$HOME/app/percona-xtrabackup-2.0.8
  35 PATH=$PERCONA_XB/bin:$PATH
- 36 export PATH
+ 36 export PATH`
 
 **注意查看是否已经设置了mysql环境变量，如果没有，也需要自行添加。**
 
@@ -42,6 +42,8 @@ XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详�
 
 ### 注意事项
 * 如果未添加mysql环境变量，会报如下错误：
+
+{% highlight bash linenos %}
 >[gongjz@localhost bin]$ ./innobackupex --user=root --password=Netease163 /home/gongjz/backup/
 >
 >InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
@@ -53,6 +55,7 @@ the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
 >160126 16:08:07  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --unbuffered --
 >160126 16:08:07  innobackupex: Connected to database with mysql child process (pid=3078)
 **innobackupex: Error: mysql child process has died: sh: mysql: command not found**
+{% endhighlight bash %}
 
 * 如果未添加XtraBackup的环境变量，会报如下错误：
 >[gongjz@localhost bin]$ ./innobackupex --user=root --password=Netease163 --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
@@ -117,4 +120,3 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 [1]: https://www.percona.com/doc/percona-xtrabackup/2.2/index.html "Percona XtraBackup"
 [2]: https://www.percona.com/doc/percona-xtrabackup/2.2/installation.html "XtraBackup安装文档"
 [3]: https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.3.3/binary/tarball/percona-xtrabackup-2.3.3-Linux-x86_64.tar.gz "Linux Generic 64位二进制安装包"
-
