@@ -49,7 +49,7 @@ System.out.println(n1 != n2);
 
 在代码中用标记结尾，效果如下：
 
-{% highlight java linenos %}
+{% highlight c linenos %}
 #include <stdio.h>
 int main(int argc, char* argv[])
 {
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
-{% endhighlight java %}
+{% endhighlight c %}
 
 
 在代码前添加一个tab，效果如下：
