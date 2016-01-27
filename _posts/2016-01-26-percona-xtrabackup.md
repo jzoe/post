@@ -9,20 +9,33 @@ tags: [MySQL, Backup, XtraBackup]
 
 XtraBackup直接读取主机的数据库文件，而不是通过mysql server。但我们能通过把其它机器的磁盘空间挂载在数据库所在的主机上，并指定该磁盘空间作为目标目录。
 
-## 1.安装XtraBackup
+## 1. 安装XtraBackup
 ### 下载
 XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详细的介绍，我采用的是[X86_64 Linux Generic][3]的压缩包
 ### 解压
 将二进制安装包解压到指定文件夹，我路径是：`/home/gongjz/app/percona-xtrabackup-2.0.8`
-
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ cd Downloads/
 [gongjz@localhost Downloads]$ tar zxvf percona-xtrabackup-2.0.8-587.tar.gz 
 [gongjz@localhost Downloads]$ mv percona-xtrabackup-2.0.8 ~/app/
 {% endhighlight bash %}
 
+xtrabackup的目录结构如下：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ ls ~/app/percona-xtrabackup-2.0.8/
+bin  share
+[gongjz@localhost ~]$ ls ~/app/percona-xtrabackup-2.0.8/bin/
+innobackupex  innobackupex-1.5.1  xbstream  xtrabackup  xtrabackup_51  xtrabackup_55  xtrabackup_56
+[gongjz@localhost ~]$ 
+{% endhighlight bash %}
+
+innobackupex工具是一个Perl脚本，它对基于C语言实现的xtrabackup工具进行包装。
+innobackupex是与Oracle的InnoDB Hot Backup Tool 一同发布的Perl脚本innobackup的补丁包版本(patched version)。
+innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，如文件拷贝和流化(file copying and streaming)，并且添加一些其它方便的功能。
+它使得我们能够对InnoDB/XtraDB引擎、MyISAM的表和server的其它分区进行**point-in-time**备份。对于InnoDB/XtraDB引擎的表，在备份的同时也会将它们的**schema definitions信息**一起进行备份。
+
 ### 添加环境变量
-在`.bash_profile`文件中添加下列内容:
+在`~/.bash_profile`文件中添加下列内容:
 {% highlight bash linenos %}
  28 # MySQL path
  29 MYSQL_HOME=$HOME/app/mysql
@@ -36,6 +49,8 @@ XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详�
 {% endhighlight bash %}
 
 **注意查看是否已经设置了mysql环境变量，如果没有，也需要自行添加。**
+
+在添加环境变量时，一定要注意将自己安装的mysql环境变量添加$PATH之前（即这样配置`PATH=$MYSQL_HOME/bin:$PATH`，而不是~~`PATH=$PATH:$MYSQL_HOME/bin`~~），否则系统会根据PATH中的顺序依次查找mysql命令，这时若其它用户安装mysql后添加了环境变量会在你的之前被匹配，故不会执行自己安装的mysql。
 
 添加好环境变量后，更新环境变量，使其生效：
 
@@ -58,7 +73,8 @@ the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
 
 160126 16:08:07  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --unbuffered --
 160126 16:08:07  innobackupex: Connected to database with mysql child process (pid=3078)
-**innobackupex: Error: mysql child process has died: sh: mysql: command not found**
+innobackupex: Error: mysql child process has died: sh: mysql: command not found
+[gongjz@localhost bin]$ 
 {% endhighlight bash %}
 
 * 如果未添加XtraBackup的环境变量，会报如下错误：
@@ -84,13 +100,111 @@ innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or
 
 sh: xtrabackup_55: command not found
 innobackupex: fatal error: no 'mysqld' group in MySQL options
+[gongjz@localhost bin]$ 
 {% endhighlight bash %}
 
 
-## 2.运行XtraBackup
+## 2. 运行XtraBackup
+### 连接参数设置
+在运行XtraBackup时，需要指定数据库的用户名和密码，这是两个基本的选项：
+* 在命令行添加**`--user=dbuser`**和**`--password=XXX`**参数来指定，推荐使用**root**用户进行备份。
+在未指定`--user`时，XtraBackup会认为数据库用户名就是当前执行它的系统用户。
 
-在配置好环境变量后，运行报如下错误：
+对于不同的系统，可能需要指定其它一些可选的连接选项：
+* 通过TCP/IP连接到数据库服务器时，需要指定**`--port`**和**`--host`**选项。
+* 连接到本地数据库服务器时，需要通过**`--socket`**选项来指定socket文件。
 
+这些参数都是传递给mysql子线程的，可以查看`mysql --help`获得更详细的连接参数细节。
+
+### 数据库用户权限设置
+在连接到数据库后，为了实现备份，需要有对`datadir`进行 **READ\WRITE\EXECUTE** 的权限。
+db_user需要有下列的权限：
+* **RELOAD** 和 **LOCK TABLES**(除非指定了 `--no-lock`选项)权限，以便在开始拷贝文件之前 FLUSH TABLES WITH READ LOCK。
+* **REPLICATION CLIENT** 权限用于获取bin_log的位置。
+* **CREATE TABLESPACE** 权限用于导入表。
+* **SUPER** 权限用于在replication环境下，启动/停止 slave线程。
+
+具体作用，可以查看[How Innobackupex Works][5]，在后续的文章中，也会有相应的介绍，敬请期待！
+
+要想xtrabacup进行完全的备份，需要的最少权限如下：
+{% highlight sql linenos %}
+mysql> CREATE USER 'bkpuser'@'localhost' IDENTIFIED BY 's3cret';
+mysql> GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'localhost';
+mysql> FLUSH PRIVILEGES;
+{% endhighlight sql %}
+
+为测试缺少权限时的错误，我将root用户的相关权限删除：
+{% highlight sql linenos %}
+mysql> revoke RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* from 'root'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+{% endhighlight sql %}
+
+这时，运行结果如下：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=Netease163 -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+
+InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
+
+This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
+
+160127 16:03:32  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:32  innobackupex: Connected to database with mysql child process (pid=12111)
+160127 16:03:38  innobackupex: Connection to database server closed
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
+innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+innobackupex: Created backup directory /home/gongjz/backup/2016-01-27_16-03-38
+160127 16:03:38  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:38  innobackupex: Connected to database with mysql child process (pid=12141)
+160127 16:03:40  innobackupex: Connection to database server closed
+
+160127 16:03:40  innobackupex: Starting ibbackup with command: xtrabackup_55  --defaults-file="/home/gongjz/etc/my.cnf"  --defaults-group="mysqld" --backup --suspend-at-end --target-dir=/home/gongjz/backup/2016-01-27_16-03-38 --tmpdir=/home/gongjz/tmp
+innobackupex: Waiting for ibbackup (pid=12150) to suspend
+innobackupex: Suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended'
+
+xtrabackup_55 version 2.0.8 for Percona Server 5.5.16 Linux (x86_64) (revision id: 587)
+xtrabackup: uses posix_fadvise().
+xtrabackup: cd to /home/gongjz/data
+xtrabackup: Target instance is assumed as followings.
+xtrabackup:   innodb_data_home_dir = ./
+xtrabackup:   innodb_data_file_path = ibdata1:10M:autoextend
+xtrabackup:   innodb_log_group_home_dir = ./
+xtrabackup:   innodb_log_files_in_group = 2
+xtrabackup:   innodb_log_file_size = 5242880
+>> log scanned up to (2574993)
+[01] Copying ./ibdata1 to /home/gongjz/backup/2016-01-27_16-03-38/ibdata1
+[01]        ...done
+>> log scanned up to (2574993)
+xtrabackup: Creating suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended' with pid '12150'
+
+160127 16:03:42  innobackupex: Continuing after ibbackup has suspended
+160127 16:03:42  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:42  innobackupex: Connected to database with mysql child process (pid=12164)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+160127 16:03:44  innobackupex: Starting to lock all tables...
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7: Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+ while waiting for reply to MySQL request: 'FLUSH TABLES WITH READ LOCK;' at /home/gongjz/app/percona-xtrabackup-2.0.8/bin/innobackupex line 386.
+[gongjz@localhost ~]$ 
+{% endhighlight bash %}
+
+### 添加--defaults-file参数
+
+在配置好环境变量后，运行时报如下错误：
 {% highlight bash linenos %}
 [gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
@@ -153,8 +267,27 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
  2529 }
 {% endhighlight cpp%}
 
-发现是xtrabackup在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行（结尾处输出 `innobackupex: completed OK!`）：
+发现是xtrabackup在打开`datadir`时出错。在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。
 
+查看`innobackupex --help`可知，确实可以配置**--defaults-file**选项：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ innobackupex --help
+Options:
+    --defaults-file=[MY.CNF]
+        This option specifies what file to read the default MySQL options
+        from. The option accepts a string argument. It is also passed
+        directly to xtrabackup's --defaults-file option. See the xtrabackup
+        documentation for details.
+
+    --defaults-extra-file=[MY.CNF]
+        This option specifies what extra file to read the default MySQL
+        options from before the standard defaults-file. The option accepts a
+        string argument. It is also passed directly to xtrabackup's
+        --defaults-extra-file option. See the xtrabackup documentation for
+        details.
+{% endhighlight bash %}
+
+所以给它添加该配置文件参数后，可正常运行（结尾处输出 `innobackupex: completed OK!`）：
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
@@ -248,7 +381,12 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 [gongjz@localhost ~]$ 
 {% endhighlight bash %}
 
-## 3.XtraBackup备份结果分析
+### 总结
+要想顺利运行，需根据不同的环境，配置不同的参数，一下几点需特别注意：
+* 添加mysql环境变量，可通过`echo $PATH`查看是否已经添加；
+* 
+
+## 3. XtraBackup备份结果分析
 运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
 
 {% highlight bash linenos %}
@@ -271,9 +409,12 @@ authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
 [gongjz@localhost ~]
 {% endhighlight bash %} 
 
+XtraBackup在运行时，会生成一个以
+
 
 
 [1]: https://www.percona.com/doc/percona-xtrabackup/2.2/index.html "Percona XtraBackup"
 [2]: https://www.percona.com/doc/percona-xtrabackup/2.2/installation.html "XtraBackup安装文档"
 [3]: https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.3.3/binary/tarball/percona-xtrabackup-2.3.3-Linux-x86_64.tar.gz "Linux Generic 64位二进制安装包"
 [4]: http://fossies.org/linux/drizzle/plugin/innobase/xtrabackup/xtrabackup.cc "网页搜索（CTRL + F）该函数可查看到源码"
+[5]: https://www.percona.com/doc/percona-xtrabackup/2.0/innobackupex/how_innobackupex_works.html#how-ibk-works "innobackup的工作原理"
