@@ -48,7 +48,7 @@ XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详�
 * 如果未添加mysql环境变量，会报如下错误：
 
 {% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=Netease163 /home/gongjz/backup/
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
 and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
@@ -64,7 +64,7 @@ the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
 * 如果未添加XtraBackup的环境变量，会报如下错误：
 
 {% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=Netease163 --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
 and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
@@ -89,7 +89,7 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 * 在配置好环境变量后，运行报如下错误：
 
 {% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=Netease163 --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
 and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
@@ -153,7 +153,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 发现是xtrabackup在未指定配置文件路径`--defaults-file=/home/gongjz/etc/my.cnf`时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行：
 
 {% highlight bash linenos %}
-[gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=Netease163 -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+[gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
 and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
