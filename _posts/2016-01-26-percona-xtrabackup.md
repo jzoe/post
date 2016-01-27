@@ -86,7 +86,10 @@ sh: xtrabackup_55: command not found
 innobackupex: fatal error: no 'mysqld' group in MySQL options
 {% endhighlight bash %}
 
-* 在配置好环境变量后，运行报如下错误：
+
+## 运行XtraBackup
+
+在配置好环境变量后，运行报如下错误：
 
 {% highlight bash linenos %}
 [gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
@@ -124,7 +127,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 [gongjz@localhost bin]$ 
 {% endhighlight bash %}
 
-查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]：
+查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
 
 {% highlight cpp linenos %}
  2509 /* CAUTION(?): Don't rename file_per_table during backup */
@@ -150,7 +153,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
  2529 }
 {% endhighlight cpp%}
 
-发现是xtrabackup在未指定配置文件路径`--defaults-file=/home/gongjz/etc/my.cnf`时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行：
+发现是xtrabackup在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行：
 
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
@@ -244,6 +247,29 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 160127 10:56:42  innobackupex: completed OK!
 [gongjz@localhost ~]$ 
 {% endhighlight bash %}
+
+## XtraBackup备份结果分析
+运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
+
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ ls backup/
+2016-01-27_11-27-52
+[gongjz@localhost ~]$ ls backup/2016-01-27_11-27-52/
+backup-my.cnf  ibdata1  performance_schema  xtrabackup_binary       xtrabackup_checkpoints
+HostInfoMgr    mysql    test                xtrabackup_binlog_info  xtrabackup_logfile
+[gongjz@localhost ~]$ ls backup/2016-01-27_11-27-52/HostInfoMgr/
+authority.frm           config.frm  department.frm  host_prop_map.frm   sys_user.frm
+authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
+[gongjz@localhost ~]$ ls data/
+HostInfoMgr  localhost.localdomain.err  mysql-bin.000003  mysql-bin.000007  mysql-bin.000011  performance_schema
+ibdata1      mysql                      mysql-bin.000004  mysql-bin.000008  mysql-bin.index   test
+ib_logfile0  mysql-bin.000001           mysql-bin.000005  mysql-bin.000009  mysqld.log
+ib_logfile1  mysql-bin.000002           mysql-bin.000006  mysql-bin.000010  mysqld.pid
+[gongjz@localhost ~]$ ls data/HostInfoMgr/
+authority.frm           config.frm  department.frm  host_prop_map.frm   sys_user.frm
+authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
+[gongjz@localhost ~]
+{% endhighlight bash %} 
 
 
 
