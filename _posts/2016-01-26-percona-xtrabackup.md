@@ -9,6 +9,7 @@ tags: [MySQL, Backup, XtraBackup]
 
 XtraBackup直接读取主机的数据库文件，而不是通过mysql server。但我们能通过把其它机器的磁盘空间挂载在数据库所在的主机上，并指定该磁盘空间作为目标目录。
 
+
 ## 1. 安装XtraBackup
 ### 下载
 XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详细的介绍，我采用的是[X86_64 Linux Generic][3]的压缩包
@@ -50,7 +51,7 @@ innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，�
 
 **注意查看是否已经设置了mysql环境变量，如果没有，也需要自行添加。**
 
-在添加环境变量时，一定要注意将自己安装的mysql环境变量添加$PATH之前（即这样配置`PATH=$MYSQL_HOME/bin:$PATH`，而不是~~`PATH=$PATH:$MYSQL_HOME/bin`~~），否则系统会根据PATH中的顺序依次查找mysql命令，这时若其它用户安装mysql后添加了环境变量会在你的之前被匹配，故不会执行自己安装的mysql。
+在添加环境变量时，一定要注意将自己安装的mysql环境变量添加$PATH之前（即应该这样配置`PATH=$MYSQL_HOME/bin:$PATH`，而不是~~`PATH=$PATH:$MYSQL_HOME/bin`~~），否则系统会根据PATH中的顺序依次查找mysql命令，这时若其它用户安装mysql后添加了环境变量会在你的之前被匹配，故不会执行自己安装的mysql。
 
 添加好环境变量后，更新环境变量，使其生效：
 
@@ -202,7 +203,7 @@ innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7:
 [gongjz@localhost ~]$ 
 {% endhighlight bash %}
 
-### 添加--defaults-file参数
+### 添加`--defaults-file`参数
 
 在配置好环境变量后，运行时报如下错误：
 {% highlight bash linenos %}
@@ -382,34 +383,87 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 {% endhighlight bash %}
 
 ### 总结
-要想顺利运行，需根据不同的环境，配置不同的参数，一下几点需特别注意：
-* 添加mysql环境变量，可通过`echo $PATH`查看是否已经添加；
-* 
+要想顺利运行，需根据不同的环境，配置不同的参数，以下几点需特别注意：
+*添加mysql环境变量，可通过`echo $PATH`查看是否已经添加；
+*添加xtrabackup环境变量；
+*添加必要的连接参数选项`--user`, `--password`, `--socket`等，这些选项都是传递给mysql子线程的，故可以先通过将这些参数传递给mysql，看是否能够连接成功；
+*添加必要的配置文件参数选项`--defaults-file`，配置文件需确保正确无误。
+
 
 ## 3. XtraBackup备份结果分析
-运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
 
+XtraBackup在运行时，会生成一个以当前时间（**yyyy-MM-dd_hh:mm:ss**)命名的目录，用于保存此次备份的数据。
+
+运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ ls backup/
 2016-01-27_11-27-52
-[gongjz@localhost ~]$ ls backup/2016-01-27_11-27-52/
-backup-my.cnf  ibdata1  performance_schema  xtrabackup_binary       xtrabackup_checkpoints
-HostInfoMgr    mysql    test                xtrabackup_binlog_info  xtrabackup_logfile
+{% endhighlight bash %}
+
+将备份其与数据库datadir目录进行比较：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ ll backup/2016-01-27_11-27-52/
+total 18464
+-rw-rw-r--. 1 gongjz gongjz      260 Jan 27 11:27 backup-my.cnf
+drwxrwxr-x. 2 gongjz gongjz     4096 Jan 27 11:28 HostInfoMgr
+-rw-rw----. 1 gongjz gongjz 18874368 Jan 27 11:27 ibdata1
+drwxrwxr-x. 2 gongjz gongjz     4096 Jan 27 11:28 mysql
+drwxrwxr-x. 2 gongjz gongjz     4096 Jan 27 11:28 performance_schema
+drwxrwxr-x. 2 gongjz gongjz        6 Jan 27 11:28 test
+-rw-rw-r--. 1 gongjz gongjz       13 Jan 27 11:28 xtrabackup_binary
+-rw-rw-r--. 1 gongjz gongjz       23 Jan 27 11:28 xtrabackup_binlog_info
+-rw-rw----. 1 gongjz gongjz       77 Jan 27 11:28 xtrabackup_checkpoints
+-rw-rw----. 1 gongjz gongjz     2560 Jan 27 11:28 xtrabackup_logfile
+
+[gongjz@localhost ~]$ ll data/
+total 29096
+drwx------. 2 gongjz gongjz     4096 Jan 25 17:04 HostInfoMgr
+-rw-rw----. 1 gongjz gongjz 18874368 Jan 27 10:06 ibdata1
+-rw-rw----. 1 gongjz gongjz  5242880 Jan 27 10:11 ib_logfile0
+-rw-rw----. 1 gongjz gongjz  5242880 Dec  4 12:34 ib_logfile1
+-rw-r-----. 1 gongjz gongjz     4856 Dec  4 18:27 localhost.localdomain.err
+drwx------. 2 gongjz gongjz     4096 Dec  4 11:28 mysql
+-rw-rw----. 1 gongjz gongjz      426 Dec  4 14:26 mysql-bin.000001
+-rw-rw----. 1 gongjz gongjz      126 Dec  4 18:27 mysql-bin.000002
+-rw-rw----. 1 gongjz gongjz      322 Dec  7 18:49 mysql-bin.000003
+-rw-rw----. 1 gongjz gongjz      832 Dec  9 09:43 mysql-bin.000004
+-rw-rw----. 1 gongjz gongjz      126 Dec  9 09:57 mysql-bin.000005
+-rw-rw----. 1 gongjz gongjz      611 Dec  9 19:13 mysql-bin.000006
+-rw-rw----. 1 gongjz gongjz   324358 Jan  7 14:39 mysql-bin.000007
+-rw-rw----. 1 gongjz gongjz      526 Jan  7 19:11 mysql-bin.000008
+-rw-rw----. 1 gongjz gongjz     4262 Jan 27 10:00 mysql-bin.000009
+-rw-rw----. 1 gongjz gongjz      126 Jan 27 10:06 mysql-bin.000010
+-rw-rw----. 1 gongjz gongjz      150 Jan 27 12:39 mysql-bin.000011
+-rw-rw----. 1 gongjz gongjz      558 Jan 27 16:47 mysql-bin.000012
+-rw-rw----. 1 gongjz gongjz      228 Jan 27 12:39 mysql-bin.index
+-rw-r-----. 1 gongjz gongjz    20492 Jan 27 12:39 mysqld.log
+-rw-rw----. 1 gongjz gongjz        5 Jan 27 10:11 mysqld.pid
+drwx------. 2 gongjz gongjz     4096 Dec  4 11:28 performance_schema
+drwx------. 2 gongjz gongjz        6 Dec  4 11:28 test
+{% endhighlight bash %}
+
+经对比可知，xtrabackup会对数据库的**配置文件**(backup-my.cnf)、**各个数据库**(HostInfoMgr/mysql/test/performance_schema等)分别进行备份。同时也会生成以下文件：
+*ibdata1:
+*xtrabackup_binary：
+*xtrabackup_checkpoints：
+*xtrabackup_binlog_info：
+*xtrabackup_logfile：
+
+xtrabackup会将每个数据库备份到单独的目录中，对其中的`HostInfoMgr`数据库进行进行比较：
+{% highlight bash linenos %} 
 [gongjz@localhost ~]$ ls backup/2016-01-27_11-27-52/HostInfoMgr/
 authority.frm           config.frm  department.frm  host_prop_map.frm   sys_user.frm
 authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
-[gongjz@localhost ~]$ ls data/
-HostInfoMgr  localhost.localdomain.err  mysql-bin.000003  mysql-bin.000007  mysql-bin.000011  performance_schema
-ibdata1      mysql                      mysql-bin.000004  mysql-bin.000008  mysql-bin.index   test
-ib_logfile0  mysql-bin.000001           mysql-bin.000005  mysql-bin.000009  mysqld.log
-ib_logfile1  mysql-bin.000002           mysql-bin.000006  mysql-bin.000010  mysqld.pid
+
 [gongjz@localhost ~]$ ls data/HostInfoMgr/
 authority.frm           config.frm  department.frm  host_prop_map.frm   sys_user.frm
 authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
-[gongjz@localhost ~]
-{% endhighlight bash %} 
+{% endhighlight bash %}
 
-XtraBackup在运行时，会生成一个以
+可知xtrapbackup实际上对数据库进行了物理备份，将原数据库中的文件复制到备份文件夹中。
+
+## 结语
+在wish哥的指导下，今天才刚开始接触xtrabackup工具，对其了解非常肤浅，待后续继续学习，再修改本文中不足与错误之处。
 
 
 
