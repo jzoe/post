@@ -384,12 +384,10 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 
 ### 总结
 要想顺利运行，需根据不同的环境，配置不同的参数，以下几点需特别注意：
+
 * 添加mysql环境变量，可通过`echo $PATH`查看是否已经添加；
-
 * 添加xtrabackup环境变量；
-
 * 添加必要的连接参数选项`--user`, `--password`, `--socket`等，这些选项都是传递给mysql子线程的，故可以先通过将这些参数传递给mysql，看是否能够连接成功；
-
 * 添加必要的配置文件参数选项`--defaults-file`，配置文件需确保正确无误。
 
 
@@ -446,14 +444,11 @@ drwx------. 2 gongjz gongjz        6 Dec  4 11:28 test
 {% endhighlight bash %}
 
 经对比可知，xtrabackup会对数据库的**配置文件**(backup-my.cnf)、**各个数据库**(HostInfoMgr/mysql/test/performance_schema等)分别进行备份。同时也会生成以下文件：
+
 * ibdata1:
-
 * xtrabackup_binary：
-
 * xtrabackup_checkpoints：
-
 * xtrabackup_binlog_info：
-
 * xtrabackup_logfile：
 
 xtrabackup会将每个数据库备份到单独的目录中，对其中的`HostInfoMgr`数据库进行进行比较：
