@@ -153,7 +153,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
  2529 }
 {% endhighlight cpp%}
 
-发现是xtrabackup在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行：
+发现是xtrabackup在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。所以给它添加该配置文件参数后，可正常运行（结尾处输出 `innobackupex: completed OK!`）：
 
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
