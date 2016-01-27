@@ -9,7 +9,7 @@ tags: [MySQL, Backup, XtraBackup]
 
 XtraBackup直接读取主机的数据库文件，而不是通过mysql server。但我们能通过把其它机器的磁盘空间挂载在数据库所在的主机上，并指定该磁盘空间作为目标目录。
 
-## 安装XtraBackup
+## 1.安装XtraBackup
 ### 下载
 XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详细的介绍，我采用的是[X86_64 Linux Generic][3]的压缩包
 ### 解压
@@ -87,7 +87,7 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 {% endhighlight bash %}
 
 
-## 运行XtraBackup
+## 2.运行XtraBackup
 
 在配置好环境变量后，运行报如下错误：
 
@@ -248,7 +248,7 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 [gongjz@localhost ~]$ 
 {% endhighlight bash %}
 
-## XtraBackup备份结果分析
+## 3.XtraBackup备份结果分析
 运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
 
 {% highlight bash linenos %}
