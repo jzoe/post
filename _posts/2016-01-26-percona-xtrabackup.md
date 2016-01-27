@@ -120,14 +120,15 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 ### 数据库用户权限设置
 在连接到数据库后，为了实现备份，需要有对`datadir`进行 **READ\WRITE\EXECUTE** 的权限。
 db_user需要有下列的权限：
+
 * **RELOAD** 和 **LOCK TABLES**(除非指定了 `--no-lock`选项)权限，以便在开始拷贝文件之前 FLUSH TABLES WITH READ LOCK。
 * **REPLICATION CLIENT** 权限用于获取bin_log的位置。
 * **CREATE TABLESPACE** 权限用于导入表。
 * **SUPER** 权限用于在replication环境下，启动/停止 slave线程。
 
-具体作用，可以查看[How Innobackupex Works][5]，在后续的文章中，也会有相应的介绍，敬请期待！
+具体作用，可以查看[How innobackupex Works][5]，在后续的文章中，也会有相应的介绍，敬请期待！
 
-要想xtrabacup进行完全的备份，需要的最少权限如下：
+要想xtrabackup进行完全的备份，需要的最少权限如下：
 {% highlight sql linenos %}
 mysql> CREATE USER 'bkpuser'@'localhost' IDENTIFIED BY 's3cret';
 mysql> GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'localhost';
@@ -447,7 +448,7 @@ drwx------. 2 gongjz gongjz        6 Dec  4 11:28 test
 
 * ibdata1:
 * xtrabackup_binary：
-* xtrabackup_checkpoints：
+* xtrabackup_checkpoints：记录了checkpoint的信息
 * xtrabackup_binlog_info：
 * xtrabackup_logfile：
 
