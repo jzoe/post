@@ -5,7 +5,7 @@ pagetitle: 擦不出火花也要试试呀
 comments: yes
 ---
 
-<a href="http://imgur.com/qZ55W"><img src="http://7xq43l.com1.z0.glb.clouddn.com/MARTIN.PNG" alt="" title="Hosted by imgur.com" /></a>
+<a href="http://imgur.com/qZ55W"><img src="http://7xq43l.com1.z0.glb.clouddn.com/MARTIN.PNG" alt="" title="Hosted by qiniu.com" /></a>
 
 Mark for MLK Day's!
 
