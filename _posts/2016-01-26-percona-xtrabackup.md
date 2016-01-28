@@ -60,49 +60,6 @@ innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，�
 [gongjz@localhost bin]$ source ~/.bash_profile
 {% endhighlight bash %}
 
-### 注意事项
-* 如果未添加mysql环境变量，会报如下错误：
-
-{% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password /home/gongjz/backup/
-
-InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
-and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
-
-This software is published under
-the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
-
-160126 16:08:07  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --unbuffered --
-160126 16:08:07  innobackupex: Connected to database with mysql child process (pid=3078)
-innobackupex: Error: mysql child process has died: sh: mysql: command not found
-[gongjz@localhost bin]$ 
-{% endhighlight bash %}
-
-* 如果未添加XtraBackup的环境变量，会报如下错误：
-
-{% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
-
-InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
-and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
-
-This software is published under
-the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
-
-160126 16:17:32  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160126 16:17:32  innobackupex: Connected to database with mysql child process (pid=3366)
-160126 16:17:38  innobackupex: Connection to database server closed
-IMPORTANT: Please check that the backup run completes successfully.
-           At the end of a successful backup run innobackupex
-           prints "completed OK!".
-
-innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
-innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
-
-sh: xtrabackup_55: command not found
-innobackupex: fatal error: no 'mysqld' group in MySQL options
-[gongjz@localhost bin]$ 
-{% endhighlight bash %}
 
 
 ## 2. 运行XtraBackup
@@ -207,91 +164,9 @@ innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7:
 {% endhighlight bash %}
 
 ### 添加`--defaults-file`参数
+在未指定--defaults-file参数的情况下，innobackupex会使用my.cnf的默认配置参数，未指定的话，会导致无法正确查找到datadir。
 
-在配置好环境变量后，运行时报如下错误：
-{% highlight bash linenos %}
-[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
-
-InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
-and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
-
-This software is published under
-the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
-
-160126 16:22:10  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160126 16:22:10  innobackupex: Connected to database with mysql child process (pid=3636)
-160126 16:22:16  innobackupex: Connection to database server closed
-IMPORTANT: Please check that the backup run completes successfully.
-           At the end of a successful backup run innobackupex
-           prints "completed OK!".
-
-innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
-innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
-
-innobackupex: Created backup directory /home/gongjz/backup/2016-01-26_16-22-16
-160126 16:22:16  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160126 16:22:16  innobackupex: Connected to database with mysql child process (pid=3663)
-160126 16:22:18  innobackupex: Connection to database server closed
-
-160126 16:22:18  innobackupex: Starting ibbackup with command: xtrabackup_55  --defaults-group="mysqld" --backup --suspend-at-end --target-dir=/home/gongjz/backup/2016-01-26_16-22-16 --tmpdir=/tmp
-innobackupex: Waiting for ibbackup (pid=3679) to suspend
-innobackupex: Suspend file '/home/gongjz/backup/2016-01-26_16-22-16/xtrabackup_suspended'
-
-xtrabackup_55 version 2.0.8 for Percona Server 5.5.16 Linux (x86_64) (revision id: 587)
-xtrabackup: uses posix_fadvise().
-xtrabackup_55: Can't change dir to '/var/lib/mysql' (Errcode: 2)
-xtrabackup: cannot my_setwd /var/lib/mysql
-innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
-[gongjz@localhost bin]$ 
-{% endhighlight bash %}
-
-查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
-
-{% highlight cpp linenos %}
- 2509 /* CAUTION(?): Don't rename file_per_table during backup */
- 2510 static void
- 2511 xtrabackup_backup_func(void)
- 2512 {
- 2513 	struct stat stat_info;
- 2514 	LSN64 latest_cp;
- 2515 
- 2516 #ifdef USE_POSIX_FADVISE
- 2517 	fprintf(stderr, "xtrabackup: uses posix_fadvise().\n");
- 2518 #endif
- 2519 
- 2520 	/* cd to datadir */
- 2521 
- 2522 	if (chdir(mysql_real_data_home) != 0)
- 2523 	{
- 2524 		fprintf(stderr, "xtrabackup: cannot my_setwd %s\n", mysql_real_data_home);
- 2525 		exit(EXIT_FAILURE);
- 2526 	}
- 2527 	fprintf(stderr, "xtrabackup: cd to %s\n", mysql_real_data_home);
- 2528   ...
- 2529 }
-{% endhighlight cpp%}
-
-发现是xtrabackup在打开`datadir`时出错。在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。
-
-查看`innobackupex --help`可知，确实可以配置**--defaults-file**选项：
-{% highlight bash linenos %}
-[gongjz@localhost ~]$ innobackupex --help
-Options:
-    --defaults-file=[MY.CNF]
-        This option specifies what file to read the default MySQL options
-        from. The option accepts a string argument. It is also passed
-        directly to xtrabackup's --defaults-file option. See the xtrabackup
-        documentation for details.
-
-    --defaults-extra-file=[MY.CNF]
-        This option specifies what extra file to read the default MySQL
-        options from before the standard defaults-file. The option accepts a
-        string argument. It is also passed directly to xtrabackup's
-        --defaults-extra-file option. See the xtrabackup documentation for
-        details.
-{% endhighlight bash %}
-
-所以给它添加该配置文件参数后，可正常运行（结尾处输出 `innobackupex: completed OK!`）：
+所以给它添加该配置文件参数后，运行结果如下：
 {% highlight bash linenos %}
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
@@ -466,6 +341,136 @@ authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
 {% endhighlight bash %}
 
 可知xtrapbackup实际上对数据库进行了物理备份，将原数据库中的文件复制到备份文件夹中。
+
+## 常见问题
+
+* 如果未添加mysql环境变量，会报如下错误：
+
+{% highlight bash linenos %}
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password /home/gongjz/backup/
+
+InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
+
+This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
+
+160126 16:08:07  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --unbuffered --
+160126 16:08:07  innobackupex: Connected to database with mysql child process (pid=3078)
+innobackupex: Error: mysql child process has died: sh: mysql: command not found
+[gongjz@localhost bin]$ 
+{% endhighlight bash %}
+
+* 如果未添加XtraBackup的环境变量，会报如下错误：
+
+{% highlight bash linenos %}
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+
+InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
+
+This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
+
+160126 16:17:32  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160126 16:17:32  innobackupex: Connected to database with mysql child process (pid=3366)
+160126 16:17:38  innobackupex: Connection to database server closed
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
+innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+sh: xtrabackup_55: command not found
+innobackupex: fatal error: no 'mysqld' group in MySQL options
+[gongjz@localhost bin]$ 
+{% endhighlight bash %}
+
+* 在配置好环境变量后，未配置`--defaults-file`参数，运行时报如下错误：
+
+{% highlight bash linenos %}
+[gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+
+InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
+
+This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
+
+160126 16:22:10  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160126 16:22:10  innobackupex: Connected to database with mysql child process (pid=3636)
+160126 16:22:16  innobackupex: Connection to database server closed
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
+innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+innobackupex: Created backup directory /home/gongjz/backup/2016-01-26_16-22-16
+160126 16:22:16  innobackupex: Starting mysql with options:  --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160126 16:22:16  innobackupex: Connected to database with mysql child process (pid=3663)
+160126 16:22:18  innobackupex: Connection to database server closed
+
+160126 16:22:18  innobackupex: Starting ibbackup with command: xtrabackup_55  --defaults-group="mysqld" --backup --suspend-at-end --target-dir=/home/gongjz/backup/2016-01-26_16-22-16 --tmpdir=/tmp
+innobackupex: Waiting for ibbackup (pid=3679) to suspend
+innobackupex: Suspend file '/home/gongjz/backup/2016-01-26_16-22-16/xtrabackup_suspended'
+
+xtrabackup_55 version 2.0.8 for Percona Server 5.5.16 Linux (x86_64) (revision id: 587)
+xtrabackup: uses posix_fadvise().
+xtrabackup_55: Can't change dir to '/var/lib/mysql' (Errcode: 2)
+xtrabackup: cannot my_setwd /var/lib/mysql
+innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
+[gongjz@localhost bin]$ 
+{% endhighlight bash %}
+
+查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
+
+{% highlight cpp linenos %}
+ 2509 /* CAUTION(?): Don't rename file_per_table during backup */
+ 2510 static void
+ 2511 xtrabackup_backup_func(void)
+ 2512 {
+ 2513 	struct stat stat_info;
+ 2514 	LSN64 latest_cp;
+ 2515 
+ 2516 #ifdef USE_POSIX_FADVISE
+ 2517 	fprintf(stderr, "xtrabackup: uses posix_fadvise().\n");
+ 2518 #endif
+ 2519 
+ 2520 	/* cd to datadir */
+ 2521 
+ 2522 	if (chdir(mysql_real_data_home) != 0)
+ 2523 	{
+ 2524 		fprintf(stderr, "xtrabackup: cannot my_setwd %s\n", mysql_real_data_home);
+ 2525 		exit(EXIT_FAILURE);
+ 2526 	}
+ 2527 	fprintf(stderr, "xtrabackup: cd to %s\n", mysql_real_data_home);
+ 2528   ...
+ 2529 }
+{% endhighlight cpp%}
+
+发现是xtrabackup在打开`datadir`时出错。在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。
+
+查看`innobackupex --help`可知，确实可以配置**--defaults-file**选项：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ innobackupex --help
+Options:
+    --defaults-file=[MY.CNF]
+        This option specifies what file to read the default MySQL options
+        from. The option accepts a string argument. It is also passed
+        directly to xtrabackup's --defaults-file option. See the xtrabackup
+        documentation for details.
+
+    --defaults-extra-file=[MY.CNF]
+        This option specifies what extra file to read the default MySQL
+        options from before the standard defaults-file. The option accepts a
+        string argument. It is also passed directly to xtrabackup's
+        --defaults-extra-file option. See the xtrabackup documentation for
+        details.
+{% endhighlight bash %}
+所以给它添加该配置文件参数后，可正常运行（结尾处输出 `innobackupex: completed OK!`）
 
 ## 结语
 在wish哥的指导下，今天才刚开始接触xtrabackup工具，对其了解非常肤浅，待后续继续学习，再修改本文中不足与错误之处。
