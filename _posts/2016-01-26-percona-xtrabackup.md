@@ -60,7 +60,9 @@ innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，�
 [gongjz@localhost bin]$ source ~/.bash_profile
 {% endhighlight bash %}
 
+如果未正确配置mysql环境变量，会报[这个错误](#mysql-env-error)。
 
+如果未正确配置xtrabackup环境变量，会报[这个错误](#xb-env-error)。
 
 ## 2. 运行XtraBackup
 ### 连接参数设置
@@ -94,77 +96,11 @@ mysql> GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'localh
 mysql> FLUSH PRIVILEGES;
 {% endhighlight sql %}
 
-为测试缺少权限时的错误，我将root用户的相关权限删除：
-{% highlight sql linenos %}
-mysql> revoke RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* from 'root'@'localhost';
-Query OK, 0 rows affected (0.00 sec)
-mysql> FLUSH PRIVILEGES;
-Query OK, 0 rows affected (0.00 sec)
-{% endhighlight sql %}
+如果未正确配置，会报[这个错误](#privilege-error)
 
-这时，运行结果如下：
-{% highlight bash linenos %}
-[gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=Netease163 -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
-
-InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
-and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
-
-This software is published under
-the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
-
-160127 16:03:32  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160127 16:03:32  innobackupex: Connected to database with mysql child process (pid=12111)
-160127 16:03:38  innobackupex: Connection to database server closed
-IMPORTANT: Please check that the backup run completes successfully.
-           At the end of a successful backup run innobackupex
-           prints "completed OK!".
-
-innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
-innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
-
-innobackupex: Created backup directory /home/gongjz/backup/2016-01-27_16-03-38
-160127 16:03:38  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160127 16:03:38  innobackupex: Connected to database with mysql child process (pid=12141)
-160127 16:03:40  innobackupex: Connection to database server closed
-
-160127 16:03:40  innobackupex: Starting ibbackup with command: xtrabackup_55  --defaults-file="/home/gongjz/etc/my.cnf"  --defaults-group="mysqld" --backup --suspend-at-end --target-dir=/home/gongjz/backup/2016-01-27_16-03-38 --tmpdir=/home/gongjz/tmp
-innobackupex: Waiting for ibbackup (pid=12150) to suspend
-innobackupex: Suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended'
-
-xtrabackup_55 version 2.0.8 for Percona Server 5.5.16 Linux (x86_64) (revision id: 587)
-xtrabackup: uses posix_fadvise().
-xtrabackup: cd to /home/gongjz/data
-xtrabackup: Target instance is assumed as followings.
-xtrabackup:   innodb_data_home_dir = ./
-xtrabackup:   innodb_data_file_path = ibdata1:10M:autoextend
-xtrabackup:   innodb_log_group_home_dir = ./
-xtrabackup:   innodb_log_files_in_group = 2
-xtrabackup:   innodb_log_file_size = 5242880
->> log scanned up to (2574993)
-[01] Copying ./ibdata1 to /home/gongjz/backup/2016-01-27_16-03-38/ibdata1
-[01]        ...done
->> log scanned up to (2574993)
-xtrabackup: Creating suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended' with pid '12150'
-
-160127 16:03:42  innobackupex: Continuing after ibbackup has suspended
-160127 16:03:42  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
-160127 16:03:42  innobackupex: Connected to database with mysql child process (pid=12164)
->> log scanned up to (2574993)
->> log scanned up to (2574993)
-160127 16:03:44  innobackupex: Starting to lock all tables...
->> log scanned up to (2574993)
->> log scanned up to (2574993)
->> log scanned up to (2574993)
->> log scanned up to (2574993)
->> log scanned up to (2574993)
->> log scanned up to (2574993)
-innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7: Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
- while waiting for reply to MySQL request: 'FLUSH TABLES WITH READ LOCK;' at /home/gongjz/app/percona-xtrabackup-2.0.8/bin/innobackupex line 386.
-[gongjz@localhost ~]$ 
-{% endhighlight bash %}
 
 ### 添加`--defaults-file`参数
-在未指定--defaults-file参数的情况下，innobackupex会使用my.cnf的默认配置参数，未指定的话，会导致无法正确查找到datadir。
+在未指定--defaults-file参数的情况下，innobackupex会使用my.cnf的默认配置参数，未指定的话，会导致无法正确查找到datadir，例如[这个错误](#default-file-error)。
 
 所以给它添加该配置文件参数后，运行结果如下：
 {% highlight bash linenos %}
@@ -343,7 +279,7 @@ authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
 可知xtrapbackup实际上对数据库进行了物理备份，将原数据库中的文件复制到备份文件夹中。
 
 ## 常见问题
-
+<span id="mysql-env-error"></span>
 * 如果未添加mysql环境变量，会报如下错误：
 
 {% highlight bash linenos %}
@@ -361,6 +297,7 @@ innobackupex: Error: mysql child process has died: sh: mysql: command not found
 [gongjz@localhost bin]$ 
 {% endhighlight bash %}
 
+<span id="xb-env-error"></span>
 * 如果未添加XtraBackup的环境变量，会报如下错误：
 
 {% highlight bash linenos %}
@@ -387,6 +324,78 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 [gongjz@localhost bin]$ 
 {% endhighlight bash %}
 
+<span id="privilege-error"></span>
+* 为测试缺少权限时的错误，我将root用户的相关权限删除：
+
+{% highlight sql linenos %}
+mysql> revoke RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* from 'root'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+{% endhighlight sql %}
+
+这时，运行结果如下：
+{% highlight bash linenos %}
+[gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=Netease163 -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
+
+InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.
+
+This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.
+
+160127 16:03:32  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:32  innobackupex: Connected to database with mysql child process (pid=12111)
+160127 16:03:38  innobackupex: Connection to database server closed
+IMPORTANT: Please check that the backup run completes successfully.
+           At the end of a successful backup run innobackupex
+           prints "completed OK!".
+
+innobackupex: Using mysql  Ver 14.14 Distrib 5.5.46, for linux2.6 (x86_64) using readline 5.1
+innobackupex: Using mysql server version Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+innobackupex: Created backup directory /home/gongjz/backup/2016-01-27_16-03-38
+160127 16:03:38  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:38  innobackupex: Connected to database with mysql child process (pid=12141)
+160127 16:03:40  innobackupex: Connection to database server closed
+
+160127 16:03:40  innobackupex: Starting ibbackup with command: xtrabackup_55  --defaults-file="/home/gongjz/etc/my.cnf"  --defaults-group="mysqld" --backup --suspend-at-end --target-dir=/home/gongjz/backup/2016-01-27_16-03-38 --tmpdir=/home/gongjz/tmp
+innobackupex: Waiting for ibbackup (pid=12150) to suspend
+innobackupex: Suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended'
+
+xtrabackup_55 version 2.0.8 for Percona Server 5.5.16 Linux (x86_64) (revision id: 587)
+xtrabackup: uses posix_fadvise().
+xtrabackup: cd to /home/gongjz/data
+xtrabackup: Target instance is assumed as followings.
+xtrabackup:   innodb_data_home_dir = ./
+xtrabackup:   innodb_data_file_path = ibdata1:10M:autoextend
+xtrabackup:   innodb_log_group_home_dir = ./
+xtrabackup:   innodb_log_files_in_group = 2
+xtrabackup:   innodb_log_file_size = 5242880
+>> log scanned up to (2574993)
+[01] Copying ./ibdata1 to /home/gongjz/backup/2016-01-27_16-03-38/ibdata1
+[01]        ...done
+>> log scanned up to (2574993)
+xtrabackup: Creating suspend file '/home/gongjz/backup/2016-01-27_16-03-38/xtrabackup_suspended' with pid '12150'
+
+160127 16:03:42  innobackupex: Continuing after ibbackup has suspended
+160127 16:03:42  innobackupex: Starting mysql with options:  --defaults-file='/home/gongjz/etc/my.cnf' --password=xxxxxxxx --user='root' --socket='/home/gongjz/tmp/mysql.sock' --unbuffered --
+160127 16:03:42  innobackupex: Connected to database with mysql child process (pid=12164)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+160127 16:03:44  innobackupex: Starting to lock all tables...
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+>> log scanned up to (2574993)
+innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7: Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+ while waiting for reply to MySQL request: 'FLUSH TABLES WITH READ LOCK;' at /home/gongjz/app/percona-xtrabackup-2.0.8/bin/innobackupex line 386.
+[gongjz@localhost ~]$ 
+{% endhighlight bash %}
+
+<span id="default-file-error"></span>
 * 在配置好环境变量后，未配置`--defaults-file`参数，运行时报如下错误：
 
 {% highlight bash linenos %}
