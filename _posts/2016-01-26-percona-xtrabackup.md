@@ -280,6 +280,7 @@ authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
 
 ## 常见问题
 <span id="mysql-env-error"></span>
+
 * 如果未添加mysql环境变量，会报如下错误：
 
 {% highlight bash linenos %}
@@ -298,6 +299,7 @@ innobackupex: Error: mysql child process has died: sh: mysql: command not found
 {% endhighlight bash %}
 
 <span id="xb-env-error"></span>
+
 * 如果未添加XtraBackup的环境变量，会报如下错误：
 
 {% highlight bash linenos %}
@@ -325,6 +327,7 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 {% endhighlight bash %}
 
 <span id="privilege-error"></span>
+
 * 为测试缺少权限时的错误，我将root用户的相关权限删除：
 
 {% highlight sql linenos %}
@@ -396,6 +399,7 @@ innobackupex: Error: mysql child process has died: ERROR 1227 (42000) at line 7:
 {% endhighlight bash %}
 
 <span id="default-file-error"></span>
+
 * 在配置好环境变量后，未配置`--defaults-file`参数，运行时报如下错误：
 
 {% highlight bash linenos %}
