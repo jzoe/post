@@ -1,11 +1,11 @@
 ---
 title: 我的关注
 layout: about-me
-comments: no
+comments: YES
 pagetitle: 跟随大神们的脚步，准没错
 ---
 
-最近收集了很多非常棒的博客，也是他们激起了开始博客之旅！感谢每一位作者的倾心付出！
+最近收集了很多非常棒的博客，也是他们激起了我开启博客之旅！感谢每一位作者的倾心付出！
 
 
 下面是我的收藏的博客，希望能对各位有用！
@@ -13,9 +13,9 @@ pagetitle: 跟随大神们的脚步，准没错
 ###[MySQL](http://planet.mysql.com/ "MySQL星球传递门")
 
 1. [MySQL Enterprise Backup](https://blogs.oracle.com/mysqlenterprisebackup/ "MySQL Enterprise Backup博客")
-2. [MySQL HA组的博客](http://mysqlhighavailability.com/ "MySQL HA组的博客")
+2. [MySQL HA](http://mysqlhighavailability.com/ "MySQL HA组的博客")
 3. [MySQL Performace](https://www.percona.com/blog/ "Percona 官方博客")
-4. [MySQL Server组的博客](http://mysqlserverteam.com/ "MySQL Server组的博客")
+4. [MySQL Server](http://mysqlserverteam.com/ "MySQL Server组的博客")
 5. [Severalnines 公司的MySQL博客](http://severalnines.com/blog-tags/mysql "Severalnines提供数据库集群管理服务")
 6. [Open Query 博客](https://openquery.com.au/blog/ "MySQL查询方面的博客")
 7. [InnoDB团队博客](https://blogs.oracle.com/mysqlinnodb/ "InnoDB团队博客")
@@ -79,3 +79,5 @@ pagetitle: 跟随大神们的脚步，准没错
 8. [Jeff Preshing C++/Python大法](http://preshing.com/ "")
 9. [快课网](http://www.cricode.com/ "没事逛逛")
 10. [酷壳——陈皓](http://coolshell.cn/ "阿里资深技术专家")
+
+看了这么多，大家有什么推荐的博客或者希望我关注你的博客，记得给我留言哈，谢谢！
