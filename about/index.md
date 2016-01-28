@@ -1,23 +1,23 @@
 ---
 title: Jingzhou Gong | 龚京洲
-layout: page
+layout: about-me
 comments: no
 pagetitle: 懒死的猪
 ---
 
-##个人说明
+###个人说明
 
 * 南京邮电大学   本科   2012.09 - 至今
 * 网易邮件DBA
 
-##欢迎交流
+###欢迎交流
 
 * 网站：[我的主页](http://www.gongjingzhou.cn "浏览我的真容 O(∩_∩)O哈哈~")
 * 邮箱：[{{ site.email }}](mailto:{{ site.email }} "偷偷告诉你我还有一个邮箱：hzgongjingzhou@corp.netease.com")
 * GitHub : [我的GitHub](http://github.com/{{ site.github }} "空空如也，但也不妨逛逛")
 * 微博: [我的微博](http://weibo.com/u/{{ site.weibo }} "什么都没有，别看了")
 
-##本站架构
+###本站架构
 
 本博客使用jekyll搭建，所有文章都使用vim编辑完成，然后使用git push到github上，这简直酷毙了！
 感兴趣的朋友可以看下这篇文章——《[像黑客一样写博客][2]》，如果有意愿搭建一个博客，可以参照[这个教程][3]。
