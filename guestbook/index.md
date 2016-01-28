@@ -8,11 +8,13 @@ thread: 616
 
 <a href="http://imgur.com/qZ55W"><img src="http://7xq43l.com1.z0.glb.clouddn.com/MARTIN.PNG" alt="" title="Hosted by imgur.com" /></a>
 
-声明：
+Mark for MLK Day's!
 
-我写博客的目的是想记录自己的学习、生活历程，本来是很私人的一件事，但是我权衡利弊后选择公开，主要是想和有相同经历的人进行沟通。 可以谈论技术、也可以谈论生活琐碎，但是有几点要求：
+* Intelligence plus character – that is the goal of real education.
+* In the End, we will remember not the words of our enemies, but the silence of our friends.
+* The meaning of life is to live a full life, not to live long.
 
-* 技术类的文章可能带有强烈的个人看法或者理解偏见甚至错误，沟通则是双方共同进步的契机。所以，对待技术问题，希望您能**严肃认真、经过一定的思考**，没有脑力活动的评论将被删除
-* 留言最好有上下文，无论技术、生活，请尽量做到客观
-* 禁止广告、脏话、人身攻击之类的评论
-* 如果对某一话题很有兴趣想深入讨论，更欢迎邮件交流。
+* In this world, no one can make you fall, if your own beliefs are still standing.
+* Faith is the first step when you can't see the whole staircase.
+
+**If you can’t fly, then run; if you can’t run, then walk; if you can’t walk, then crawl, but whatever you do, you have to keep moving forward.**

@@ -108,10 +108,12 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 ## 2. 运行XtraBackup
 ### 连接参数设置
 在运行XtraBackup时，需要指定数据库的用户名和密码，这是两个基本的选项：
+
 * 在命令行添加**`--user=dbuser`**和**`--password=XXX`**参数来指定，推荐使用**root**用户进行备份。
 在未指定`--user`时，XtraBackup会认为数据库用户名就是当前执行它的系统用户。
 
 对于不同的系统，可能需要指定其它一些可选的连接选项：
+
 * 通过TCP/IP连接到数据库服务器时，需要指定**`--port`**和**`--host`**选项。
 * 连接到本地数据库服务器时，需要通过**`--socket`**选项来指定socket文件。
 
@@ -449,7 +451,7 @@ drwx------. 2 gongjz gongjz        6 Dec  4 11:28 test
 * ibdata1:
 * xtrabackup_binary：
 * xtrabackup_checkpoints：记录了checkpoint的信息
-* xtrabackup_binlog_info：
+* xtrabackup_binlog_info：记录binlog的信息
 * xtrabackup_logfile：
 
 xtrabackup会将每个数据库备份到单独的目录中，对其中的`HostInfoMgr`数据库进行进行比较：
