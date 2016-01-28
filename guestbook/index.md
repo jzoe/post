@@ -17,4 +17,4 @@ Mark for MLK Day's!
 * In this world, no one can make you fall, if your own beliefs are still standing.
 * Faith is the first step when you can't see the whole staircase.
 
-**If you can’t fly, then run; if you can’t run, then walk; if you can’t walk, then crawl, but whatever you do, you have to keep moving forward.**
+**If you can't fly, then run; if you can't run, then walk; if you can't walk, then crawl, but whatever you do, you have to keep moving forward.**
