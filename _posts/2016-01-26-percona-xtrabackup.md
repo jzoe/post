@@ -90,7 +90,8 @@ db_user需要有下列的权限：
 具体作用，可以查看[How innobackupex Works][5]，在后续的文章中，也会有相应的介绍，敬请期待！
 
 要想xtrabackup进行完全的备份，需要的最少权限如下：
-<pre class="prettyprint lang-sql">
+<!--?prettify lang=sql linenums?-->
+<pre class="prettyprint">
 mysql> CREATE USER 'bkpuser'@'localhost' IDENTIFIED BY 's3cret';
 mysql> GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'localhost';
 mysql> FLUSH PRIVILEGES;
