@@ -15,14 +15,14 @@ XtraBackup直接读取主机的数据库文件，而不是通过mysql server。�
 XtraBackup提供了多种安装方式，在其文档的[安装页][2]中有详细的介绍，我采用的是[X86_64 Linux Generic][3]的压缩包
 ### 解压
 将二进制安装包解压到指定文件夹，我路径是：`/home/gongjz/app/percona-xtrabackup-2.0.8`
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ cd Downloads/
 [gongjz@localhost Downloads]$ tar zxvf percona-xtrabackup-2.0.8-587.tar.gz 
 [gongjz@localhost Downloads]$ mv percona-xtrabackup-2.0.8 ~/app/
 </pre>
 
 xtrabackup的目录结构如下：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ ls ~/app/percona-xtrabackup-2.0.8/
 bin  share
 [gongjz@localhost ~]$ ls ~/app/percona-xtrabackup-2.0.8/bin/
@@ -37,7 +37,7 @@ innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，�
 
 ### 添加环境变量
 在`~/.bash_profile`文件中添加下列内容:
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
  28 # MySQL path
  29 MYSQL_HOME=$HOME/app/mysql
  30 PATH=$MYSQL_HOME/bin:$PATH
@@ -55,7 +55,7 @@ innobackupex具有更多的功能，它集成了**xtrabacup**和其它功能，�
 
 添加好环境变量后，更新环境变量，使其生效：
 
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost bin]$ vim ~/.bash_profile
 [gongjz@localhost bin]$ source ~/.bash_profile
 </pre>
@@ -90,7 +90,7 @@ db_user需要有下列的权限：
 具体作用，可以查看[How innobackupex Works][5]，在后续的文章中，也会有相应的介绍，敬请期待！
 
 要想xtrabackup进行完全的备份，需要的最少权限如下：
-<pre class="prettyprint">
+<pre class="prettyprint lang-sql">
 mysql> CREATE USER 'bkpuser'@'localhost' IDENTIFIED BY 's3cret';
 mysql> GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'localhost';
 mysql> FLUSH PRIVILEGES;
@@ -103,7 +103,7 @@ mysql> FLUSH PRIVILEGES;
 在未指定--defaults-file参数的情况下，innobackupex会使用my.cnf的默认配置参数，未指定的话，会导致无法正确查找到datadir，例如[这个错误](#default-file-error)。
 
 所以给它添加该配置文件参数后，运行结果如下：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
@@ -210,13 +210,13 @@ innobackupex: MySQL binlog position: filename 'mysql-bin.000011', position 107
 XtraBackup在运行时，会生成一个以当前时间（**yyyy-MM-dd_hh:mm:ss**)命名的目录，用于保存此次备份的数据。
 
 运行XtraBackup完后，查看backup文件夹，产生如下备份文件：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ ls backup/
 2016-01-27_11-27-52
 </pre>
 
 将备份其与数据库datadir目录进行比较：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ ll backup/2016-01-27_11-27-52/
 total 18464
 -rw-rw-r--. 1 gongjz gongjz      260 Jan 27 11:27 backup-my.cnf
@@ -266,7 +266,7 @@ drwx------. 2 gongjz gongjz        6 Dec  4 11:28 test
 * xtrabackup_logfile：
 
 xtrabackup会将每个数据库备份到单独的目录中，对其中的`HostInfoMgr`数据库进行进行比较：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ ls backup/2016-01-27_11-27-52/HostInfoMgr/
 authority.frm           config.frm  department.frm  host_prop_map.frm   sys_user.frm
 authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
@@ -283,7 +283,7 @@ authority_V1@002e0.frm  db.opt      host.frm        role_authority.frm
 
 * 如果未添加mysql环境变量，会报如下错误：
 
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
@@ -302,7 +302,7 @@ innobackupex: Error: mysql child process has died: sh: mysql: command not found
 
 * 如果未添加XtraBackup的环境变量，会报如下错误：
 
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost bin]$ ./innobackupex --user=root --password=your_password --socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
@@ -330,7 +330,7 @@ innobackupex: fatal error: no 'mysqld' group in MySQL options
 
 * 为测试缺少权限时的错误，我将root用户的相关权限删除：
 
-<pre class="prettyprint">
+<pre class="prettyprint lang-sql">
 mysql> revoke RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* from 'root'@'localhost';
 Query OK, 0 rows affected (0.00 sec)
 mysql> FLUSH PRIVILEGES;
@@ -338,7 +338,7 @@ Query OK, 0 rows affected (0.00 sec)
 </pre>
 
 这时，运行结果如下：
-<pre class="prettyprint">
+<pre class="prettyprint  lang-bash">
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=Netease163 -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
 InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
@@ -440,7 +440,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 
 查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
 
-<pre class="prettyprint">
+<pre class="prettyprint lang-cpp">
  2509 /* CAUTION(?): Don't rename file_per_table during backup */
  2510 static void
  2511 xtrabackup_backup_func(void)
@@ -467,7 +467,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 发现是xtrabackup在打开`datadir`时出错。在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。
 
 查看`innobackupex --help`可知，确实可以配置**--defaults-file**选项：
-<pre class="prettyprint">
+<pre class="prettyprint lang-bash">
 [gongjz@localhost ~]$ innobackupex --help
 Options:
     --defaults-file=[MY.CNF]
