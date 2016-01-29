@@ -8,8 +8,10 @@
 	<link rel="bookmark" href="{{ site.url }}/favicon.ico"/>
     <link href="{{ site.url }}/feed/" rel="alternate" title="{{ site.author }}" type="application/atom+xml" />
     <link rel="stylesheet" href="{{ site.url }}/media/css/style.css" />
-    <link rel="stylesheet" href="{{ site.url }}/media/css/highlight.css" media="all"/>
+    <!--<link rel="stylesheet" href="{{ site.url }}/media/css/highlight.css" media="all"/>-->
     <script type="text/javascript" src="{{ site.url }}/media/js/jquery-1.7.1.min.js"></script>
+	<link href="{{ site.url }}/media/js/prettify.css" rel="stylesheet" type="text/css" media="all">
+	<script type="text/javascript" src="{{ site.url }}/media/js/prettify.js"></script>
   </head>
   <body>
     <div id="container">
@@ -43,6 +45,12 @@
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
+	</script>
+	<script>
+		$(document).ready(function() {
+			$('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
+			prettyPrint();
+		});
 	</script>
   </body>
 </html>

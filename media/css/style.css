@@ -37,6 +37,10 @@ ul{list-style-position:inside;border: rgb(226, 222, 222);border-style: solid;bor
 li ol{border-style:none;}
 li ul{border-style:none;}
 ol ul, ul ol, ul ul, ol ol {margin-left:1em;}
+/* 解决代码有滚动条的问题 */
+pre{white-space:pre;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;}
+/* 使得每行都有行号 */
+pre li{ list-style-type: decimal;}
 pre code{margin:1em 0;font-size:13px;line-height:1.6;display:block;overflow:auto;}
 blockquote{display:block;text-align:justify;border-left:4px solid #eeeeee;}
 blockquote{margin:1em 0em;padding-left:1.5em;}
