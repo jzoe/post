@@ -22,6 +22,8 @@ pagetitle: 跟随大神们的脚步，准没错
 8. [中国MySQL用户组](http://acmug.com/ "名头大，静看你装逼")
 9. [InfoQ中文社区——RDBMS](http://www.infoq.com/cn/rdbms/?utm_source=infoq&utm_medium=header_graybar&utm_campaign=topic_clk "InfoQ中文社区——RDBMS专区")
 10. [淘宝数据库研发组](http://mysql.taobao.org/)
+11. [Category Archives: MySQL](https://www.percona.com/blog/category/mysql/ "Percona的MySQL专题")
+12. [Category Archives: Insight for DBAs](https://www.percona.com/blog/category/dba-insight/ "如题。。Percona博客中DBA专题")
 
 ###MySQL大咖
 
@@ -39,13 +41,14 @@ pagetitle: 跟随大神们的脚步，准没错
 2. [Percona的技术报告资源](https://www.percona.com/resources/technical-presentations)
 3. [Percona高质量资源](https://www.percona.com/resources "技术报告、eBook等")
 4. [Percona Xtrabackup工具](https://www.percona.com/software/mysql-database/percona-xtrabackup "开源热备份工具")
-5. [Category Archives: Insight for DBAs](https://www.percona.com/blog/category/dba-insight/ "如题。。Percona博客中DBA专题")
+5. [Category Archives: Percona XtraBackup](https://www.percona.com/blog/category/percona-xtrabackup/ "XtraBackup专题")
 6. [Category Archives: MongoDB](https://www.percona.com/blog/category/mongodb/ "Percona的MongoDB专题")
 7. [Category Archives: EXPLAIN](https://www.percona.com/blog/category/explain-2/ "查询解析器专题")
 8. [Category Archives: InnoDB](https://www.percona.com/blog/category/innodb/ "innodb专题")
 9. [Category Archives: Benchmarks](https://www.percona.com/blog/category/benchmarks/ "基准测试专题")
 10. [Category Archives: Insight for Developers](https://www.percona.com/blog/category/developer-insight/ "开发者专题")
 11. [Category Archives: Hardware and Storage](https://www.percona.com/blog/category/hardware-storage/ "硬件与存储专题")
+12. [Category Archives: OpenStack](https://www.percona.com/blog/category/openstack/ "OpenStack专题")
 
 ###Linux
 
