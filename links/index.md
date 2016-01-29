@@ -33,13 +33,19 @@ pagetitle: 跟随大神们的脚步，准没错
 6. [淘宝苏普](http://www.orczhou.com/ "Taobao的MySQL DBA")
 7. [何登成](http://hedengcheng.com/ "网商路MySQL大神")
 
-###[Percona](https://www.percona.com/blog/ "Percona 官方博客")
+###[Percona](https://www.percona.com/blog/ "Percona 官方博客传送门")
 
 1. [Peter Zaitsev - CEO](https://www.percona.com/blog/author/admin/ "Percona CEO, 《高性能MySQL》作者之一，膜拜吧")
 2. [Percona的技术报告资源](https://www.percona.com/resources/technical-presentations)
 3. [Percona高质量资源](https://www.percona.com/resources "技术报告、eBook等")
 4. [Percona Xtrabackup工具](https://www.percona.com/software/mysql-database/percona-xtrabackup "开源热备份工具")
-
+5. [Category Archives: Insight for DBAs](https://www.percona.com/blog/category/dba-insight/ "如题。。Percona博客中DBA专题")
+6. [Category Archives: MongoDB](https://www.percona.com/blog/category/mongodb/ "Percona的MongoDB专题")
+7. [Category Archives: EXPLAIN](https://www.percona.com/blog/category/explain-2/ "查询解析器专题")
+8. [Category Archives: InnoDB](https://www.percona.com/blog/category/innodb/ "innodb专题")
+9. [Category Archives: Benchmarks](https://www.percona.com/blog/category/benchmarks/ "基准测试专题")
+10. [Category Archives: Insight for Developers](https://www.percona.com/blog/category/developer-insight/ "开发者专题")
+11. [Category Archives: Hardware and Storage](https://www.percona.com/blog/category/hardware-storage/ "硬件与存储专题")
 
 ###Linux
 
