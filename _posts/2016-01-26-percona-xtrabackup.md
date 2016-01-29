@@ -440,28 +440,29 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 
 查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
 
-<pre class="prettyprint lang-cpp">
- 2509 /* CAUTION(?): Don't rename file_per_table during backup */
- 2510 static void
- 2511 xtrabackup_backup_func(void)
- 2512 {
- 2513 	struct stat stat_info;
- 2514 	LSN64 latest_cp;
- 2515 
- 2516 #ifdef USE_POSIX_FADVISE
- 2517 	fprintf(stderr, "xtrabackup: uses posix_fadvise().\n");
- 2518 #endif
- 2519 
- 2520 	/* cd to datadir */
- 2521 
- 2522 	if (chdir(mysql_real_data_home) != 0)
- 2523 	{
- 2524 		fprintf(stderr, "xtrabackup: cannot my_setwd %s\n", mysql_real_data_home);
- 2525 		exit(EXIT_FAILURE);
- 2526 	}
- 2527 	fprintf(stderr, "xtrabackup: cd to %s\n", mysql_real_data_home);
- 2528   ...
- 2529 }
+<?prettify lang-cpp linenums=2509 ?>
+<pre >
+ /* CAUTION(?): Don't rename file_per_table during backup */
+ static void
+ xtrabackup_backup_func(void)
+ {
+ 	struct stat stat_info;
+ 	LSN64 latest_cp;
+ 
+ #ifdef USE_POSIX_FADVISE
+ 	fprintf(stderr, "xtrabackup: uses posix_fadvise().\n");
+ #endif
+ 
+ 	/* cd to datadir */
+ 
+ 	if (chdir(mysql_real_data_home) != 0)
+ 	{
+ 		fprintf(stderr, "xtrabackup: cannot my_setwd %s\n", mysql_real_data_home);
+ 		exit(EXIT_FAILURE);
+ 	}
+ 	fprintf(stderr, "xtrabackup: cd to %s\n", mysql_real_data_home);
+   ...
+ }
 </pre>
 
 发现是xtrabackup在打开`datadir`时出错。在未指定配置文件路径**`--defaults-file=/home/gongjz/etc/my.cnf`**时，会使用默认选项，故将`/var/lib/mysql`当做`datadir`。
