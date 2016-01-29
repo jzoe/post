@@ -241,7 +241,7 @@ string &operator+(const string& A,const string& B) //cpp
 	System.out.println(n1 == n2);
 	System.out.println(n1 != n2);
 	
-<pre class="prettyPrint">
+<pre class="prettyprint">
 Integer n1 = new Integer(47);
 Integer n2 = new Integer(47);
 System.out.println(n1 == n2);
