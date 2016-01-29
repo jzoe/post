@@ -440,7 +440,7 @@ innobackupex: Error: ibbackup child process has died at ./innobackupex line 386.
 
 查看[xtrabackup.cc/xtrabackup_backup_func()函数源码][4]，其中部分内容如下：
 
-<?prettify lang-cpp linenums=2509 ?>
+<?prettify linenums=2509?>
 <pre >
  /* CAUTION(?): Don't rename file_per_table during backup */
  static void
