@@ -236,6 +236,19 @@ document.getElementById("myH1").innerHTML="Welcome to my Homepage"; //javascipt
 string &operator+(const string& A,const string& B) //cpp
 ```
 
+	Integer n1 = new Integer(47);
+	Integer n2 = new Integer(47);
+	System.out.println(n1 == n2);
+	System.out.println(n1 != n2);
+	
+<pre class="prettyprint">
+Integer n1 = new Integer(47);
+Integer n2 = new Integer(47);
+System.out.println(n1 == n2);
+System.out.println(n1 != n2);
+</pre>
+
+
 {% highlight java linenos %}
 Integer n1 = new Integer(47);
 Integer n2 = new Integer(47);
