@@ -31,4 +31,4 @@ tags: [杂谈]
 
 最后分享一张前几天吴哥哥发给我的一张图片，乃们慢慢思考！
 
-![http://7xq43l.com1.z0.glb.clouddn.com/%E8%AE%BA%E7%9F%A5%E8%AF%86%E4%B8%8E%E7%BB%8F%E9%AA%8C.png]
+![论知识与经验](http://7xq43l.com1.z0.glb.clouddn.com/%E8%AE%BA%E7%9F%A5%E8%AF%86%E4%B8%8E%E7%BB%8F%E9%AA%8C.png)
