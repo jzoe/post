@@ -110,6 +110,7 @@ mysql> FLUSH PRIVILEGES;
 在未指定--defaults-file参数的情况下，innobackupex会使用my.cnf的默认配置参数，未指定的话，会导致无法正确查找到datadir，例如[这个错误](#default-file-error)。
 
 所以给它添加该配置文件参数后，运行结果如下：
+
 ```bash
 [gongjz@localhost ~]$ innobackupex --defaults-file=/home/gongjz/etc/my.cnf --user=root --password=your_password -socket=/home/gongjz/tmp/mysql.sock /home/gongjz/backup/
 
@@ -224,6 +225,7 @@ XtraBackup在运行时，会生成一个以当前时间（**yyyy-MM-dd_hh:mm:ss*
 ```
 
 将备份其与数据库datadir目录进行比较：
+
 ```bash
 [gongjz@localhost ~]$ ll backup/2016-01-27_11-27-52/
 total 18464
