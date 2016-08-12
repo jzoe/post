@@ -47,19 +47,10 @@
 	  })();
 	</script>
 	<script>
-		// $(document).ready(function() {
-		// 	$('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
-		// 	//prettyPrint();
-		// });
-    $(function(){
-    $("pre").addClass("prettyprint linenums");
-    prettyPrint();
-    $('.entry a').each(function(){
-      if($(this).attr("href").indexOf("gongjingzhou") == -1){
-        $(this).attr("target", "_blank");
-      }
-    })
-  });
+		$(document).ready(function() {
+			$('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
+			prettyPrint();
+		});
 	</script>
   </body>
 </html>
