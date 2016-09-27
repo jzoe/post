@@ -9,14 +9,18 @@ tags: [MarkDown]
 
 ## 代码高亮
 - bash
+
 ```bash
+
 [gongjz@localhost ~]$ cd Downloads/
 [gongjz@localhost Downloads]$ tar zxvf percona-xtrabackup-2.0.8-587.tar.gz 
 [gongjz@localhost Downloads]$ mv percona-xtrabackup-2.0.8 ~/app/
 
 ```
 - java
+
 ```java
+
 System.out.println("Hello Java");
 
 ```
